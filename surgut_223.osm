@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<osm version='0.6' upload='true' generator='JOSM'>
+  <bounds minlat='61.2225344' minlon='73.3592749' maxlat='61.2230819' maxlon='73.3606482' origin='CGImap 0.4.0 (22143 thorn-03.openstreetmap.org)' />
+  <node id='-5415' action='modify' visible='true' lat='60.65137532788' lon='75.93822998104' />
+  <node id='-5413' action='modify' visible='true' lat='61.52702964568' lon='76.18406345159' />
+  <node id='-5411' action='modify' visible='true' lat='61.52086063018' lon='74.9807733063' />
+  <node id='-5409' action='modify' visible='true' lat='61.40339481616' lon='73.88289637538' />
+  <node id='-5407' action='modify' visible='true' lat='61.37572882749' lon='73.75481073344' />
+  <node id='-5405' action='modify' visible='true' lat='61.36051964121' lon='73.75440640207' />
+  <node id='-5403' action='modify' visible='true' lat='61.28254335662' lon='73.58043101703' />
+  <node id='-5401' action='modify' visible='true' lat='61.17628849486' lon='73.63784607101' />
+  <node id='-5400' action='modify' visible='true' lat='60.84293962703' lon='74.67839569942' />
+  <way id='-5402' action='modify' visible='true'>
+    <nd ref='-5400' />
+    <nd ref='-5401' />
+    <nd ref='-5403' />
+    <nd ref='-5405' />
+    <nd ref='-5407' />
+    <nd ref='-5409' />
+    <nd ref='-5411' />
+    <nd ref='-5413' />
+    <nd ref='-5415' />
+    <nd ref='-5400' />
+  </way>
+  <relation id='-5421' action='modify' visible='true'>
+    <member type='way' ref='-5402' role='outer' />
+    <tag k='name' v='Сургут-округ' />
+    <tag k='type' v='boundary' />
+  </relation>
+</osm>

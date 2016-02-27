@@ -1,0 +1,71 @@
+#Скачать и собрать Сургутский район
+1128590.osm:
+	wget -O 1128590.osm "http://www.openstreetmap.org/api/0.6/relation/1128590/full"
+1128590.sqlite: 1128590.osm
+	ogr2ogr -f SQLite -dsco spatialite=yes 1128590.sqlite 1128590.osm --config OGR_SQLITE_SYNCHRONOUS OFF --config OSM_USE_CUSTOM_INDEXING NO
+1128590.shp: 1128590.sqlite
+	ogr2ogr -f "ESRI Shapefile" 1128590.shp 1128590.sqlite -sql "select geometry from multipolygons"
+
+#Собрать кусок округа №223
+surgut_223.sqlite: surgut_223.osm
+	ogr2ogr -f SQLite -dsco spatialite=yes surgut_223.sqlite surgut_223.osm --config OGR_SQLITE_SYNCHRONOUS OFF --config OSM_USE_CUSTOM_INDEXING NO
+surgut_223.shp: surgut_223.sqlite
+	ogr2ogr -f "ESRI Shapefile" surgut_223.shp surgut_223.sqlite -sql "select geometry from multipolygons"
+
+#Добавить территорию к округу №223
+fix_okrug_223: surgut_223.shp okrug_223.shp
+	ogr2ogr -update -append okrug_223.shp surgut_223.shp -nln okrug_223
+
+#Собрать часть Сургутского района для округа №222
+1128590_222.shp: surgut_223.shp 1128590.shp
+	ogr2ogr -dialect SQLITE -sql "SELECT ST_Difference(A.geometry, B.geometry) AS geometry FROM '1128590' A, surgut_223 B WHERE A.geometry != B.geometry" . . -nln 1128590_222
+
+#Добавить территорию к округу №222
+fix_okrug_222: 1128590_222.shp okrug_222.shp
+	ogr2ogr -update -append okrug_222.shp 1128590_222.shp -nln okrug_222
+
+clean_surgut:
+	rm -f 1128590.shp 1128590.shx 1128590.sqlite 1128590.dbf 1128590.prj surgut_223.shp surgut_223.shx surgut_223.sqlite surgut_223.dbf surgut_223.prj 1128590_222.shp 1128590_222.shx 1128590_222.sqlite 1128590_222.dbf 1128590_222.prj 
+
+clean_surgut_all: clean_surgut
+	rm -f 1128590.osm
+
+#Скачать и собрать Хабаровский район
+1651729.osm:
+	wget -O 1651729.osm "http://www.openstreetmap.org/api/0.6/relation/1651729/full"
+1651729.sqlite: 1651729.osm
+	ogr2ogr -f SQLite -dsco spatialite=yes 1651729.sqlite 1651729.osm --config OGR_SQLITE_SYNCHRONOUS OFF --config OSM_USE_CUSTOM_INDEXING NO
+1651729.shp: 1651729.sqlite
+	ogr2ogr -f "ESRI Shapefile" 1651729.shp 1651729.sqlite -sql "select geometry from multipolygons"
+
+#Собрать кусок округа №69 (с лишними выступающими частями за границу Xабаровского района)
+khabarovsk_69.sqlite: khabarovsk_69.osm
+	ogr2ogr -f SQLite -dsco spatialite=yes khabarovsk_69.sqlite khabarovsk_69.osm --config OGR_SQLITE_SYNCHRONOUS OFF --config OSM_USE_CUSTOM_INDEXING NO
+khabarovsk_69.shp: khabarovsk_69.sqlite
+	ogr2ogr -f "ESRI Shapefile" khabarovsk_69.shp khabarovsk_69.sqlite -sql "select geometry from multipolygons"
+
+#Обрезать этот кусок по границам Хабаровского района
+1651729_69.shp: 1651729.shp khabarovsk_69.shp
+	ogr2ogr -dialect SQLITE -sql "SELECT ST_Intersection(A.geometry, B.geometry) AS geometry, A.*, B.* FROM khabarovsk_69 A, '1651729' B WHERE ST_Intersects(A.geometry, B.geometry)" . . -nln 1651729_69
+
+#Добавить территорию к округу №69
+fix_okrug_69: 1651729_69.shp okrug_69.shp
+	ogr2ogr -update -append okrug_69.shp 1651729_69.shp -nln okrug_69
+
+#Найти территорию Хабаровского района из округа 70
+1651729_70.shp: 1651729.shp 1651729_69.shp
+	ogr2ogr -dialect SQLITE -sql "SELECT ST_Difference(A.geometry, B.geometry) AS geometry FROM '1651729' A, '1651729_69' B WHERE A.geometry != B.geometry" . . -nln 1651729_70
+
+#Добавить территорию к округу №70
+fix_okrug_70: 1651729_70.shp okrug_70.shp
+	ogr2ogr -update -append okrug_70.shp 1651729_70.shp -nln okrug_70
+
+clean_khabarovsk:
+	rm -f 1651729.shp 1651729.shx 1651729.sqlite 1651729.dbf 1651729.prj khabarovsk_69.shp khabarovsk_69.shx khabarovsk_69.sqlite khabarovsk_69.dbf khabarovsk_69.prj 1651729_69.shp 1651729_69.shx 1651729_69.sqlite 1651729_69.dbf 1651729_69.prj 1651729_70.shp 1651729_70.shx 1651729_70.sqlite 1651729_70.dbf 1651729_70.prj 
+
+clean_khabarovsk_all: clean_khabarovsk
+	rm -f 1651729.osm
+	
+
+
+

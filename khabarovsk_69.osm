@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<osm version='0.6' upload='true' generator='JOSM'>
+  <node id='-30325' action='modify' visible='true' lat='48.45260858514' lon='134.77594582865' />
+  <node id='-30323' action='modify' visible='true' lat='48.04117226725' lon='134.43704526172' />
+  <node id='-30321' action='modify' visible='true' lat='48.0460952976' lon='136.02021573413' />
+  <node id='-30268' action='modify' visible='true' lat='48.37040212959' lon='135.16149446336' />
+  <node id='-30253' action='modify' visible='true' lat='48.37015238784' lon='135.15569776252' />
+  <node id='-30227' action='modify' visible='true' lat='48.51799088405' lon='136.04467876139' />
+  <node id='-30223' action='modify' visible='true' lat='48.51801813402' lon='135.54729616745' />
+  <node id='-28926' action='modify' visible='true' lat='48.51081038342' lon='135.51982606894' />
+  <node id='-28924' action='modify' visible='true' lat='48.50237688699' lon='135.48148934576' />
+  <node id='-28922' action='modify' visible='true' lat='48.49510589332' lon='135.44800189778' />
+  <node id='-28920' action='modify' visible='true' lat='48.47207609043' lon='135.44857769428' />
+  <node id='-26779' action='modify' visible='true' lat='48.43894218552' lon='135.45017856984' />
+  <node id='-26773' action='modify' visible='true' lat='48.41528939377' lon='135.43416779879' />
+  <node id='-26771' action='modify' visible='true' lat='48.39602554173' lon='135.4366566991' />
+  <node id='-22784' action='modify' visible='true' lat='48.37451765488' lon='135.29579956933' />
+  <node id='-22776' action='modify' visible='true' lat='48.35841969873' lon='135.22187702524' />
+  <node id='-22190' action='modify' visible='true' lat='48.36650128622' lon='135.17731326646' />
+  <node id='-22188' action='modify' visible='true' lat='48.37111458431' lon='135.08137894418' />
+  <node id='-22186' action='modify' visible='true' lat='48.42574681793' lon='135.04703174463' />
+  <node id='-22184' action='modify' visible='true' lat='48.44526961124' lon='134.93207569191' />
+  <node id='-22183' action='modify' visible='true' lat='48.45073464906' lon='134.86773168971' />
+  <way id='-22185' action='modify' visible='true'>
+    <nd ref='-22183' />
+    <nd ref='-22184' />
+    <nd ref='-22186' />
+    <nd ref='-22188' />
+    <nd ref='-30253' />
+    <nd ref='-30268' />
+    <nd ref='-22190' />
+    <nd ref='-22776' />
+    <nd ref='-22784' />
+    <nd ref='-26771' />
+    <nd ref='-26773' />
+    <nd ref='-26779' />
+    <nd ref='-28920' />
+    <nd ref='-28922' />
+    <nd ref='-28924' />
+    <nd ref='-28926' />
+    <nd ref='-30223' />
+    <nd ref='-30227' />
+    <nd ref='-30321' />
+    <nd ref='-30323' />
+    <nd ref='-30325' />
+    <nd ref='-22183' />
+  </way>
+ <relation id='-30331' action='modify' visible='true'>
+    <member type='way' ref='-22185' role='outer' />
+    <tag k='name' v='Хабаровский 69' />
+    <tag k='type' v='boundary' />
+  </relation>
+</osm>

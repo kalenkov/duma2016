@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<osm version='0.6' upload='true' generator='JOSM'>
+  <bounds minlat='56.1812029' minlon='47.4269271' maxlat='56.1818478' maxlon='47.4275064' origin='CGImap 0.4.0 (6984 thorn-01.openstreetmap.org)' />
+  <node id='-1009' action='modify' visible='true' lat='56.35890092252' lon='47.4924736554' />
+  <node id='-1007' action='modify' visible='true' lat='56.14047739984' lon='47.52831039067' />
+  <node id='-1005' action='modify' visible='true' lat='56.15574305527' lon='47.17521314607' />
+  <node id='-1004' action='modify' visible='true' lat='56.36065263104' lon='47.14043043242' />
+  <way id='-1006' action='modify' visible='true'>
+    <nd ref='-1004' />
+    <nd ref='-1005' />
+    <nd ref='-1007' />
+    <nd ref='-1009' />
+    <nd ref='-1004' />
+  </way>
+  <relation id='-1045' action='modify' visible='true'>
+    <member type='way' ref='-1006' role='outer' />
+    <tag k='boundary' v='administrative' />
+    <tag k='name' v='Заволжская часть' />
+    <tag k='type' v='boundary' />
+  </relation>
+ </osm>
