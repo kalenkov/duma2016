@@ -22,6 +22,11 @@ print "$id.sqlite: $id.osm\n";
 print "\togr2ogr -f SQLite -dsco spatialite=yes $id.sqlite $id.osm --config OGR_SQLITE_SYNCHRONOUS OFF --config OSM_USE_CUSTOM_INDEXING NO\n";
 print "$id.shp: $id.sqlite\n";
 print "\togr2ogr -f \"ESRI Shapefile\" $id.shp $id.sqlite -sql \"select geometry from multipolygons\"\n";
+
+print "sin.sqlite: sin.osm\n";
+print "\togr2ogr -f SQLite -dsco spatialite=yes sin.sqlite sin.osm --config OGR_SQLITE_SYNCHRONOUS OFF --config OSM_USE_CUSTOM_INDEXING NO\n";
+print "sin.shp: sin.sqlite\n";
+print "\togr2ogr -f \"ESRI Shapefile\" sin.shp sin.sqlite -sql \"select geometry from multipolygons\"\n";
 			
 while (defined($line = <STDIN>)) {
 	if($line =~ /(\d+)\t(.*)$/) {
@@ -49,17 +54,20 @@ while (defined($line = <STDIN>)) {
 		}
 		#Синьяльское сельское поселение (5522997)
 		$id="5522997";
-		if($okrug==37 || $okrug==38) {
-			print "sin_$okrug.sqlite: sin_$okrug.osm\n";
-			print "\togr2ogr -f SQLite -dsco spatialite=yes sin_$okrug.sqlite sin_$okrug.osm --config OGR_SQLITE_SYNCHRONOUS OFF --config OSM_USE_CUSTOM_INDEXING NO\n";
-			print "sin_$okrug.shp: sin_$okrug.sqlite\n";
-			print "\togr2ogr -f \"ESRI Shapefile\" sin_$okrug.shp sin_$okrug.sqlite -sql \"select geometry from multipolygons\"\n";
-			
-			print "$id\_$okrug.shp: sin_$okrug.shp $id.shp\n";
-			print "\togr2ogr -dialect SQLITE -sql \"SELECT ST_Intersection(A.geometry, B.geometry) AS geometry, A.*, B.* FROM sin_$okrug A, '$id\' B WHERE ST_Intersects(A.geometry, B.geometry)\" . . -nln $id\_$okrug\n";
+		if($okrug==37) {
+			print "$id\_$okrug.shp: sin.shp $id.shp\n";
+			print "\togr2ogr -dialect SQLITE -sql \"SELECT ST_Intersection(A.geometry, B.geometry) AS geometry, A.*, B.* FROM sin A, '$id\' B WHERE ST_Intersects(A.geometry, B.geometry)\" . . -nln $id\_$okrug\n";
 			$shp_source="$shp_source $id\_$okrug.shp";
 			$shp_make="$shp_make\togr2ogr -update -append okrug_$okrug.shp $id\_$okrug.shp -nln okrug_$okrug\n";
-			$clean="$clean $id.shp $id.shx $id.sqlite $id.dbf $id.prj $id\_$okrug.shp $id\_$okrug.shx $id\_$okrug.sqlite $id\_$okrug.dbf $id\_$okrug.prj sin_$okrug.shp sin_$okrug.shx sin_$okrug.sqlite sin_$okrug.dbf sin_$okrug.prj";
+			$clean="$clean $id.shp $id.shx $id.sqlite $id.dbf $id.prj $id\_$okrug.shp $id\_$okrug.shx $id\_$okrug.sqlite $id\_$okrug.dbf $id\_$okrug.prj sin.shp sin.shx sin.sqlite sin.dbf sin.prj";
+			$clean_osm="$clean_osm $id.osm";
+		}
+		if($okrug==38) {
+			print "$id\_$okrug.shp: sin.shp $id.shp\n";
+			print "\togr2ogr -dialect SQLITE -sql \"SELECT ST_Difference(A.geometry, B.geometry) AS geometry FROM '$id\' A, sin B WHERE A.geometry != B.geometry\" . . -nln $id\_$okrug\n";
+			$shp_source="$shp_source $id\_$okrug.shp";
+			$shp_make="$shp_make\togr2ogr -update -append okrug_$okrug.shp $id\_$okrug.shp -nln okrug_$okrug\n";
+			$clean="$clean $id.shp $id.shx $id.sqlite $id.dbf $id.prj $id\_$okrug.shp $id\_$okrug.shx $id\_$okrug.sqlite $id\_$okrug.dbf $id\_$okrug.prj sin.shp sin.shx sin.sqlite sin.dbf sin.prj";
 			$clean_osm="$clean_osm $id.osm";
 		}
 		
