@@ -87,7 +87,7 @@ while (defined($line = <STDIN>)) {
 		print "\togrinfo okrug_$okrug\_diss.shp -sql \"ALTER TABLE okrug_$okrug\_diss ADD COLUMN okrug integer(4)\"\n";
 		print "\togrinfo okrug_$okrug\_diss.shp -dialect SQLite -sql \"UPDATE okrug_$okrug\_diss SET okrug = $okrug\"\n";
 		print "okrug_$okrug\_diss_land.shp: okrug_$okrug\_diss.shp russia_land_diss.shp\n";
-		print "\togr2ogr -f \"ESRI Shapefile\" okrug_$okrug\_diss_land.shp -clipsrc russia_land_diss.shp okrug_$okrug\_diss.shp\n";
+		print "\togr2ogr -f \"ESRI Shapefile\" okrug_$okrug\_diss_land.shp -clipsrc russia_land_diss.shp okrug_$okrug\_diss.shp -nlt POLYGON -skipfailures\n";
 		print "okrug_$okrug.shp: $shp_source\n";
 		print "\trm -f okrug_$okrug.shp okrug_$okrug.shx okrug_$okrug.dbf okrug_$okrug.prj\n";
 		print "$shp_make";

@@ -76,7 +76,7 @@ make fix_okrug_70
 make fix_okrug_222
 make fix_okrug_223
 ```
-После выполнения этих команд необходимо снова пересобрать файлы `okrug_69_diss.shp`, `okrug_70_diss.shp`, `okrug_222_diss.shp`, `okrug_223_diss.shp`, 
+После выполнения этих команд необходимо снова пересобрать файлы `okrug_69_diss.shp`, `okrug_70_diss.shp`, `okrug_222_diss.shp`, `okrug_223_diss.shp`. 
 
 * Удаление shape-файлов, созданных для построения исправленной границы округов 69, 70, 222, 223 (скачанные `osm` файлы не удаляются)
 ```
