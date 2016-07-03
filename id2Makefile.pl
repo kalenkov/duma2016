@@ -9,6 +9,7 @@ my @ids;
 my $id;
 my $all_source="";
 my $all_land_source="";
+my $osm_files="";
 my $all_make="\trm -f okrug_all_diss.*\n";
 my $all_land_make="\trm -f okrug_all_diss_land.*\n";
 my $clean_source="";
@@ -18,10 +19,11 @@ my $clean_all_source="";
 $id="60189";
 print "$id.osm:\n";
 print "\twget -O $id.osm \"http://www.openstreetmap.org/api/0.6/relation/$id/full\"\n";
+$osm_files="$osm_files $id.osm";
 print "russia.osm: $id.osm\n";
 print "\tosmfilter $id.osm --drop-tags=\"name*=\" -o=russia.osm\n";
 print "russia.shp: russia.osm\n";
-print "\togr2ogr -f \"ESRI Shapefile\" russia.shp russia.osm --config OGR_SQLITE_SYNCHRONOUS OFF --config OSM_USE_CUSTOM_INDEXING NO -sql \"select osm_id,osm_way_id from multipolygons\"\n";
+print "\togr2ogr -f \"ESRI Shapefile\" russia.shp russia.osm --config OGR_SQLITE_SYNCHRONOUS OFF --config OSM_USE_CUSTOM_INDEXING NO -sql \"select osm_id from multipolygons\"\n";
 print "russia_land.shp: russia.shp land_polygons.shp\n";
 print "\togr2ogr -dialect SQLITE -sql \"SELECT ST_Intersection(A.geometry, B.geometry) AS geometry, A.*, B.* FROM land_polygons A, russia B WHERE ST_Intersects(A.geometry, B.geometry)\" . . -nln russia_land\n";
 print "russia_land_diss.shp: russia_land.shp\n";
@@ -35,11 +37,12 @@ print "\trm -f $id.osm\n\n";
 $id="5522997";
 print "$id.osm:\n";
 print "\twget -O $id.osm \"http://www.openstreetmap.org/api/0.6/relation/$id/full\"\n";
+$osm_files="$osm_files $id.osm";
 print "$id.shp: $id.osm\n";
-print "\togr2ogr -f \"ESRI Shapefile\" $id.shp $id.osm --config OGR_SQLITE_SYNCHRONOUS OFF --config OSM_USE_CUSTOM_INDEXING NO -sql \"select osm_id,osm_way_id from multipolygons\"\n";
+print "\togr2ogr -f \"ESRI Shapefile\" $id.shp $id.osm --config OGR_SQLITE_SYNCHRONOUS OFF --config OSM_USE_CUSTOM_INDEXING NO -sql \"select osm_id from multipolygons\"\n";
 
 print "sin.shp: sin.osm\n";
-print "\togr2ogr -f \"ESRI Shapefile\" sin.shp sin.osm --config OGR_SQLITE_SYNCHRONOUS OFF --config OSM_USE_CUSTOM_INDEXING NO -sql \"select osm_id,osm_way_id from multipolygons\"\n";
+print "\togr2ogr -f \"ESRI Shapefile\" sin.shp sin.osm --config OGR_SQLITE_SYNCHRONOUS OFF --config OSM_USE_CUSTOM_INDEXING NO -sql \"select osm_id from multipolygons\"\n";
 			
 while (defined($line = <STDIN>)) {
 	if($line =~ /(\d+)\t(.*)$/) {
@@ -56,8 +59,9 @@ while (defined($line = <STDIN>)) {
 		foreach $id (@ids) {
 			print "$id.osm:\n";
 			print "\twget -O $id.osm \"http://www.openstreetmap.org/api/0.6/relation/$id/full\"\n";
+			$osm_files="$osm_files $id.osm";
 			print "$id.shp: $id.osm\n";
-			print "\togr2ogr -f \"ESRI Shapefile\" $id.shp $id.osm --config OGR_SQLITE_SYNCHRONOUS OFF --config OSM_USE_CUSTOM_INDEXING NO -sql \"select osm_id,osm_way_id from multipolygons\"\n";
+			print "\togr2ogr -f \"ESRI Shapefile\" $id.shp $id.osm --config OGR_SQLITE_SYNCHRONOUS OFF --config OSM_USE_CUSTOM_INDEXING NO -sql \"select osm_id from multipolygons\"\n";
 			$shp_source="$shp_source $id.shp";
 			$shp_make="$shp_make\togr2ogr -update -append okrug_$okrug.shp $id.shp -nln okrug_$okrug\n";
 			$clean="$clean $id.shp $id.shx $id.dbf $id.prj";
@@ -104,6 +108,8 @@ while (defined($line = <STDIN>)) {
 		$clean_all_source="$clean_all_source clean_all_$okrug";
 	}
 }
+
+print "osm_source: $osm_files\n";
 
 print "okrug_all: $all_source\n";
 print "$all_make \n";
