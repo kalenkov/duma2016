@@ -2,11 +2,11 @@
 1128590.osm:
 	wget -O 1128590.osm "http://www.openstreetmap.org/api/0.6/relation/1128590/full"
 1128590.shp: 1128590.osm
-	ogr2ogr -f "ESRI Shapefile" 1128590.shp 1128590.osm --config OGR_SQLITE_SYNCHRONOUS OFF --config OSM_USE_CUSTOM_INDEXING NO -sql "select osm_id,osm_way_id from multipolygons"
+	ogr2ogr -f "ESRI Shapefile" 1128590.shp 1128590.osm --config OGR_SQLITE_SYNCHRONOUS OFF --config OSM_USE_CUSTOM_INDEXING NO -sql "select osm_id from multipolygons where osm_id is not null"
 
 #Собрать кусок округа №223
 surgut_223.shp: surgut_223.osm
-	ogr2ogr -f "ESRI Shapefile" surgut_223.shp surgut_223.osm --config OGR_SQLITE_SYNCHRONOUS OFF --config OSM_USE_CUSTOM_INDEXING NO -sql "select osm_id,osm_way_id from multipolygons"
+	ogr2ogr -f "ESRI Shapefile" surgut_223.shp surgut_223.osm --config OGR_SQLITE_SYNCHRONOUS OFF --config OSM_USE_CUSTOM_INDEXING NO -sql "select osm_id from multipolygons where osm_id is not null"
 
 #Добавить территорию к округу №223
 fix_okrug_223: surgut_223.shp okrug_223.shp
@@ -30,11 +30,11 @@ clean_surgut_all: clean_surgut
 1651729.osm:
 	wget -O 1651729.osm "http://www.openstreetmap.org/api/0.6/relation/1651729/full"
 1651729.shp: 1651729.osm
-	ogr2ogr -f "ESRI Shapefile" 1651729.shp 1651729.osm --config OGR_SQLITE_SYNCHRONOUS OFF --config OSM_USE_CUSTOM_INDEXING NO -sql "select osm_id,osm_way_id from multipolygons"
+	ogr2ogr -f "ESRI Shapefile" 1651729.shp 1651729.osm --config OGR_SQLITE_SYNCHRONOUS OFF --config OSM_USE_CUSTOM_INDEXING NO -sql "select osm_id from multipolygons where osm_id is not null"
 
 #Собрать кусок округа №69 (с лишними выступающими частями за границу Xабаровского района)
 khabarovsk_69.shp: khabarovsk_69.osm
-	ogr2ogr -f "ESRI Shapefile" khabarovsk_69.shp khabarovsk_69.osm --config OGR_SQLITE_SYNCHRONOUS OFF --config OSM_USE_CUSTOM_INDEXING NO -sql "select osm_id,osm_way_id from multipolygons"
+	ogr2ogr -f "ESRI Shapefile" khabarovsk_69.shp khabarovsk_69.osm --config OGR_SQLITE_SYNCHRONOUS OFF --config OSM_USE_CUSTOM_INDEXING NO -sql "select osm_id from multipolygons where osm_id is not null"
 
 #Обрезать этот кусок по границам Хабаровского района
 1651729_69.shp: 1651729.shp khabarovsk_69.shp
