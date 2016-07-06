@@ -23,11 +23,11 @@ $osm_files="$osm_files $id.osm";
 print "russia.osm: $id.osm\n";
 print "\tosmfilter $id.osm --drop-tags=\"name*=\" -o=russia.osm\n";
 print "russia.shp: russia.osm\n";
-print "\togr2ogr -f \"ESRI Shapefile\" russia.shp russia.osm --config OGR_SQLITE_SYNCHRONOUS OFF --config OSM_USE_CUSTOM_INDEXING NO -sql \"select osm_id from multipolygons where osm_id is not null\"\n";
+print "\togr2ogr -overwrite -f \"ESRI Shapefile\" russia.shp russia.osm --config OGR_SQLITE_SYNCHRONOUS OFF --config OSM_USE_CUSTOM_INDEXING NO -sql \"select osm_id from multipolygons where osm_id is not null\"\n";
 print "russia_land.shp: russia.shp land_polygons.shp\n";
-print "\togr2ogr -dialect SQLITE -sql \"SELECT ST_Intersection(A.geometry, B.geometry) AS geometry, A.*, B.* FROM land_polygons A, russia B WHERE ST_Intersects(A.geometry, B.geometry)\" . . -nln russia_land\n";
+print "\togr2ogr -overwrite -dialect SQLITE -sql \"SELECT ST_Intersection(A.geometry, B.geometry) AS geometry, A.*, B.* FROM land_polygons A, russia B WHERE ST_Intersects(A.geometry, B.geometry)\" . . -nln russia_land\n";
 print "russia_land_diss.shp: russia_land.shp\n";
-print "\togr2ogr russia_land_diss.shp russia_land.shp -dialect sqlite -sql \"SELECT ST_Union(geometry) AS geometry FROM russia_land\"\n";
+print "\togr2ogr -overwrite russia_land_diss.shp russia_land.shp -dialect sqlite -sql \"SELECT ST_Union(geometry) AS geometry FROM russia_land\"\n";
 print "clean_russia:\n";
 print "\trm -f russia.osm russia.shp russia.shx russia.dbf russia.prj russia_land.shp russia_land.shx russia_land.dbf russia_land.prj russia_land_diss.shp russia_land_diss.shx russia_land_diss.dbf russia_land_diss.prj \n";
 print "clean_all_russia: clean_russia\n";
@@ -39,10 +39,10 @@ print "$id.osm:\n";
 print "\twget -O $id.osm \"http://www.openstreetmap.org/api/0.6/relation/$id/full\"\n";
 $osm_files="$osm_files $id.osm";
 print "$id.shp: $id.osm\n";
-print "\togr2ogr -f \"ESRI Shapefile\" $id.shp $id.osm --config OGR_SQLITE_SYNCHRONOUS OFF --config OSM_USE_CUSTOM_INDEXING NO -sql \"select osm_id from multipolygons where osm_id is not null\"\n";
+print "\togr2ogr -overwrite -f \"ESRI Shapefile\" $id.shp $id.osm --config OGR_SQLITE_SYNCHRONOUS OFF --config OSM_USE_CUSTOM_INDEXING NO -sql \"select osm_id from multipolygons where osm_id is not null\"\n";
 
 print "sin.shp: sin.osm\n";
-print "\togr2ogr -f \"ESRI Shapefile\" sin.shp sin.osm --config OGR_SQLITE_SYNCHRONOUS OFF --config OSM_USE_CUSTOM_INDEXING NO -sql \"select osm_id from multipolygons where osm_id is not null\"\n";
+print "\togr2ogr -overwrite -f \"ESRI Shapefile\" sin.shp sin.osm --config OGR_SQLITE_SYNCHRONOUS OFF --config OSM_USE_CUSTOM_INDEXING NO -sql \"select osm_id from multipolygons where osm_id is not null\"\n";
 			
 while (defined($line = <STDIN>)) {
 	if($line =~ /(\d+)\t(.*)$/) {
@@ -61,7 +61,7 @@ while (defined($line = <STDIN>)) {
 			print "\twget -O $id.osm \"http://www.openstreetmap.org/api/0.6/relation/$id/full\"\n";
 			$osm_files="$osm_files $id.osm";
 			print "$id.shp: $id.osm\n";
-			print "\togr2ogr -f \"ESRI Shapefile\" $id.shp $id.osm --config OGR_SQLITE_SYNCHRONOUS OFF --config OSM_USE_CUSTOM_INDEXING NO -sql \"select osm_id from multipolygons where osm_id is not null\"\n";
+			print "\togr2ogr -overwrite -f \"ESRI Shapefile\" $id.shp $id.osm --config OGR_SQLITE_SYNCHRONOUS OFF --config OSM_USE_CUSTOM_INDEXING NO -sql \"select osm_id from multipolygons where osm_id is not null\"\n";
 			$shp_source="$shp_source $id.shp";
 			$shp_make="$shp_make\togr2ogr -update -append okrug_$okrug.shp $id.shp -nln okrug_$okrug\n";
 			$clean="$clean $id.shp $id.shx $id.dbf $id.prj";
@@ -71,7 +71,7 @@ while (defined($line = <STDIN>)) {
 		$id="5522997";
 		if($okrug==37) {
 			print "$id\_$okrug.shp: sin.shp $id.shp\n";
-			print "\togr2ogr -dialect SQLITE -sql \"SELECT ST_Intersection(A.geometry, B.geometry) AS geometry, A.*, B.* FROM sin A, '$id\' B WHERE ST_Intersects(A.geometry, B.geometry)\" . . -nln $id\_$okrug\n";
+			print "\togr2ogr -overwrite -dialect SQLITE -sql \"SELECT ST_Intersection(A.geometry, B.geometry) AS geometry, A.*, B.* FROM sin A, '$id\' B WHERE ST_Intersects(A.geometry, B.geometry)\" . . -nln $id\_$okrug\n";
 			$shp_source="$shp_source $id\_$okrug.shp";
 			$shp_make="$shp_make\togr2ogr -update -append okrug_$okrug.shp $id\_$okrug.shp -nln okrug_$okrug\n";
 			$clean="$clean $id.shp $id.shx $id.dbf $id.prj $id\_$okrug.shp $id\_$okrug.shx $id\_$okrug.dbf $id\_$okrug.prj sin.shp sin.shx sin.dbf sin.prj";
@@ -79,7 +79,7 @@ while (defined($line = <STDIN>)) {
 		}
 		if($okrug==38) {
 			print "$id\_$okrug.shp: sin.shp $id.shp\n";
-			print "\togr2ogr -dialect SQLITE -sql \"SELECT ST_Difference(A.geometry, B.geometry) AS geometry FROM '$id\' A, sin B WHERE A.geometry != B.geometry\" . . -nln $id\_$okrug\n";
+			print "\togr2ogr -overwrite -dialect SQLITE -sql \"SELECT ST_Difference(A.geometry, B.geometry) AS geometry FROM '$id\' A, sin B WHERE A.geometry != B.geometry\" . . -nln $id\_$okrug\n";
 			$shp_source="$shp_source $id\_$okrug.shp";
 			$shp_make="$shp_make\togr2ogr -update -append okrug_$okrug.shp $id\_$okrug.shp -nln okrug_$okrug\n";
 			$clean="$clean $id.shp $id.shx $id.dbf $id.prj $id\_$okrug.shp $id\_$okrug.shx $id\_$okrug.dbf $id\_$okrug.prj sin.shp sin.shx sin.dbf sin.prj";
@@ -87,11 +87,11 @@ while (defined($line = <STDIN>)) {
 		}
 		
 		print "okrug_$okrug\_diss.shp: okrug_$okrug.shp\n";
-		print "\togr2ogr okrug_$okrug\_diss.shp okrug_$okrug.shp -dialect sqlite -sql \"SELECT ST_Union(geometry) AS geometry FROM okrug_$okrug\"\n";
+		print "\togr2ogr -overwrite okrug_$okrug\_diss.shp okrug_$okrug.shp -dialect sqlite -sql \"SELECT ST_Union(geometry) AS geometry FROM okrug_$okrug\"\n";
 		print "\togrinfo okrug_$okrug\_diss.shp -sql \"ALTER TABLE okrug_$okrug\_diss ADD COLUMN okrug integer(4)\"\n";
 		print "\togrinfo okrug_$okrug\_diss.shp -dialect SQLite -sql \"UPDATE okrug_$okrug\_diss SET okrug = $okrug\"\n";
 		print "okrug_$okrug\_diss_land.shp: okrug_$okrug\_diss.shp russia_land_diss.shp\n";
-		print "\togr2ogr -f \"ESRI Shapefile\" okrug_$okrug\_diss_land.shp -clipsrc russia_land_diss.shp okrug_$okrug\_diss.shp -nlt POLYGON -skipfailures\n";
+		print "\togr2ogr -overwrite -f \"ESRI Shapefile\" okrug_$okrug\_diss_land.shp -clipsrc russia_land_diss.shp okrug_$okrug\_diss.shp -nlt POLYGON -skipfailures\n";
 		print "okrug_$okrug.shp: $shp_source\n";
 		print "\trm -f okrug_$okrug.shp okrug_$okrug.shx okrug_$okrug.dbf okrug_$okrug.prj\n";
 		print "$shp_make";

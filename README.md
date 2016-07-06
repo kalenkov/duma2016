@@ -155,17 +155,18 @@ make clean_all_russia
 
 ### Отсутствие дыр между округами
 Проверить это можно следующим образом:
-1. Объединить все округа в один полигон
+
+Объединить все округа в один полигон
 ```
 ogr2ogr okrug_all_joined.shp okrug_all_diss.shp -dialect sqlite -sql "SELECT ST_Union(geometry) AS geometry FROM okrug_all_diss"
 ```
-2. В полученном файле не должно быть дыр в странных местах (как это автоматизировать?).
+В полученном файле не должно быть дыр в странных местах (как это автоматизировать?).
 
 ### Отстутствие наложений округов
 
-QGIS->Vector->Topology Checker
+QGIS->Vector->Topology Checker. Выбрать слой okrug_all_diss.shp и правило "must not overlap" для проверки.
 
 ### Отстутствие ошибок геометрии
-
+QGIS->Vector->Geometry Tools->Check Geometry Validity
 
 ## Упрощение геометрии
