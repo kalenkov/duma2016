@@ -19,6 +19,7 @@
 ```
 cat id.txt | ./id2Makefile.pl > Makefile
 cat Makefile.fix >> Makefile
+make fix_okrug_23
 make fix_okrug_69
 make fix_okrug_70
 make fix_okrug_222
@@ -73,20 +74,22 @@ make clean_all_NNN
 
 * Собрать shape-файл с правильной границей округов 69, 70, 222, 223
 ```
+make fix_okrug_23
 make fix_okrug_69
 make fix_okrug_70
 make fix_okrug_222
 make fix_okrug_223
 ```
-После выполнения этих команд необходимо снова пересобрать файлы `okrug_69_diss.shp`, `okrug_70_diss.shp`, `okrug_222_diss.shp`, `okrug_223_diss.shp`. 
+После выполнения этих команд необходимо снова пересобрать файлы `okrug_23_diss.shp`, `okrug_69_diss.shp`, `okrug_70_diss.shp`, `okrug_222_diss.shp`, `okrug_223_diss.shp`. 
 
-* Удаление shape-файлов, созданных для построения исправленной границы округов 69, 70, 222, 223 (скачанные `osm` файлы не удаляются)
+* Удаление shape-файлов, созданных для построения исправленной границы округов 23, 69, 70, 222, 223 (скачанные `osm` файлы не удаляются)
 ```
+make clean_mordovia
 make clean_surgut
 make clean_khabarovsk
 ```
 
-* Удаление shape-файлов, созданных для построения исправленной границы округов 69, 70, 222, 223 вместе со скачанными `osm` файлами
+* Удаление shape-файлов, созданных для построения исправленной границы округов 23, 69, 70, 222, 223 вместе со скачанными `osm` файлами
 ```
 make clean_surgut_all
 make clean_khabarovsk_all
@@ -170,3 +173,11 @@ QGIS->Vector->Topology Checker. Выбрать слой okrug_all_diss.shp и п
 QGIS->Vector->Geometry Tools->Check Geometry Validity
 
 ## Упрощение геометрии
+
+```
+mapshaper okrug_all_diss_land.shp -simplify 30% keep-shapes -o okrug_all_diss_land-30.shp
+mapshaper okrug_all_diss_land.shp -simplify 10% keep-shapes -o okrug_all_diss_land-10.shp
+mapshaper okrug_all_diss_land.shp -simplify 1% keep-shapes -o okrug_all_diss_land-1.shp
+mapshaper okrug_all_diss_land.shp -simplify 0.1% keep-shapes -o okrug_all_diss_land-01.shp
+
+```

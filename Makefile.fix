@@ -59,5 +59,15 @@ clean_khabarovsk_all: clean_khabarovsk
 	rm -f 1651729.osm
 	
 
+#Исправление границы округа 23 (в части границы с округом #130)
 
+#Вырезание из округа №23 территории ЗАТО Саров
+okrug_23_sarov.shp: okrug_23.shp 2031968.shp
+	ogr2ogr -overwrite -dialect SQLITE -sql "SELECT ST_Difference(A.geometry, B.geometry) AS geometry FROM okrug_23 A, '2031968' B WHERE A.geometry != B.geometry" . . -nln okrug_23_sarov
 
+#Копирование исправленной версии
+fix_okrug_23: okrug_23_sarov.shp okrug_23.shp
+	ogr2ogr -overwrite okrug_23.shp okrug_23_sarov.shp 
+
+clean_mordovia:
+	rm -f okrug_23_sarov.shp okrug_23_sarov.shx okrug_23_sarov.dbf okrug_23_sarov.prj
